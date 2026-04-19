@@ -80,8 +80,13 @@ AppName_UNITYDUMP.zip
 ## Build
 
 ```bash
-cd Template
-make clean package
+cd Il2CppDumper
+
+# Rootless (Dopamine, palera1n rootless)
+THEOS_PACKAGE_SCHEME=rootless make clean package FINALPACKAGE=1
+
+# Rootful (unc0ver, Taurine)
+THEOS_PACKAGE_SCHEME= make clean package FINALPACKAGE=1
 ```
 
 The resulting `.deb` appears in `Il2CppDumper/packages/`.
