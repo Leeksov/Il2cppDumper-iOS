@@ -84,7 +84,7 @@ cd Template
 make clean package
 ```
 
-The resulting `.deb` appears in `Template/packages/`.
+The resulting `.deb` appears in `Il2CppDumper/packages/`.
 
 ---
 
