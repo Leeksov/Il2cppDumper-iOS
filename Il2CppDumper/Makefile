@@ -1,8 +1,8 @@
 TARGET := iphone:clang:latest:13.0
-ARCHS = arm64
-THEOS_PACKAGE_SCHEME = rootless
+ARCHS = arm64 arm64e
+# Set THEOS_PACKAGE_SCHEME=rootless via env or here. Leave empty for rootful.
+THEOS_PACKAGE_SCHEME ?= rootless
 DEBUG = 0
-THEOS_DEVICE_IP = 192.168.1.148
 ZIP_ARCHIVE_DEFINES = -DHAVE_INTTYPES_H -DHAVE_PKCRYPT -DHAVE_STDINT_H -DHAVE_WZAES -DHAVE_ZLIB
 include $(THEOS)/makefiles/common.mk
 

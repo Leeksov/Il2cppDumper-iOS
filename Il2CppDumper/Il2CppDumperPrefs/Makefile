@@ -1,5 +1,5 @@
 TARGET = iphone:clang:latest:14.0
-THEOS_PACKAGE_SCHEME = rootless
+THEOS_PACKAGE_SCHEME ?= rootless
 DEBUG = 0
 SDK_PATH = $(THEOS)/sdks/iPhoneOS16.5.sdk/
 SYSROOT = $(SDK_PATH)
