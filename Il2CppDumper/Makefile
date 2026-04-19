@@ -12,8 +12,15 @@ HEADER_DIRS = $(shell find . -path ./.theos -prune -o -path ./Il2CppDumperPrefs 
 
 $(TWEAK_NAME)_FILES = $(shell find . -path ./.theos -prune -o -path ./Il2CppDumperPrefs -prune -o -type f \( -iname "*.cpp" -o -iname "*.c" -o -iname "*.cc" -o -iname "*.m" -o -iname "*.mm" \) -print)
 $(TWEAK_NAME)_FRAMEWORKS = UIKit Foundation Security CoreGraphics QuartzCore
-$(TWEAK_NAME)_CFLAGS = -fobjc-arc -fno-modules -fvisibility=hidden -O2 $(ZIP_ARCHIVE_DEFINES) $(foreach dir, $(HEADER_DIRS), -I$(dir))
-$(TWEAK_NAME)_CCFLAGS = -std=c++20 -fno-rtti -fno-modules -fvisibility=hidden -O2 $(foreach dir, $(HEADER_DIRS), -I$(dir))
+
+# STANDALONE=1 — builds a dylib that always runs (no prefs, no filter).
+# For direct injection into an app (Choicy, manual IPA patch, LLDB, etc.)
+ifeq ($(STANDALONE),1)
+STANDALONE_FLAGS = -DSTANDALONE_INJECT
+endif
+
+$(TWEAK_NAME)_CFLAGS = -fobjc-arc -fno-modules -fvisibility=hidden -O2 $(ZIP_ARCHIVE_DEFINES) $(STANDALONE_FLAGS) $(foreach dir, $(HEADER_DIRS), -I$(dir))
+$(TWEAK_NAME)_CCFLAGS = -std=c++20 -fno-rtti -fno-modules -fvisibility=hidden -O2 $(STANDALONE_FLAGS) $(foreach dir, $(HEADER_DIRS), -I$(dir))
 $(TWEAK_NAME)_LDFLAGS = -lz -liconv -ldl -Wl,-dead_strip_dylibs -Wl,-x
 include $(THEOS_MAKE_PATH)/tweak.mk
 

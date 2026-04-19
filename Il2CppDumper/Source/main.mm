@@ -21,6 +21,7 @@ struct DumperPrefs {
     int waitTime;
 };
 
+#ifndef STANDALONE_INJECT
 static DumperPrefs readPrefs() {
     NSDictionary *prefs = [NSDictionary dictionaryWithContentsOfFile:kPrefsPath];
     NSString *bid = [[NSBundle mainBundle] bundleIdentifier];
@@ -38,23 +39,6 @@ static DumperPrefs readPrefs() {
     return p;
 }
 
-static void copyScriptsToDump(NSString *dumpPath) {
-    NSString *src = @"/var/jb/usr/share/Il2CppDumper/scripts";
-    NSFileManager *fm = [NSFileManager defaultManager];
-    if (![fm fileExistsAtPath:src]) return;
-    NSString *dst = [dumpPath stringByAppendingPathComponent:@"scripts"];
-    [fm createDirectoryAtPath:dst withIntermediateDirectories:YES attributes:nil error:nil];
-    NSArray *files = [fm contentsOfDirectoryAtPath:src error:nil];
-    for (NSString *f in files) {
-        NSString *sp = [src stringByAppendingPathComponent:f];
-        NSString *dp = [dst stringByAppendingPathComponent:f];
-        [fm removeItemAtPath:dp error:nil];
-        [fm copyItemAtPath:sp toPath:dp error:nil];
-    }
-}
-
-// Ensure prefs plist exists with defaults — same pattern as iSSBypass.
-// Runs regardless of target, so Prefs bundle always finds a readable plist.
 static void ensurePrefsExist() {
     NSFileManager *fm = [NSFileManager defaultManager];
     if ([fm fileExistsAtPath:kPrefsPath]) return;
@@ -74,12 +58,41 @@ static void ensurePrefsExist() {
         NSFilePosixPermissions: @0644,
     } ofItemAtPath:kPrefsPath error:nil];
 }
+#endif
+
+static void copyScriptsToDump(NSString *dumpPath) {
+    NSString *src = @"/var/jb/usr/share/Il2CppDumper/scripts";
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if (![fm fileExistsAtPath:src]) return;
+    NSString *dst = [dumpPath stringByAppendingPathComponent:@"scripts"];
+    [fm createDirectoryAtPath:dst withIntermediateDirectories:YES attributes:nil error:nil];
+    NSArray *files = [fm contentsOfDirectoryAtPath:src error:nil];
+    for (NSString *f in files) {
+        NSString *sp = [src stringByAppendingPathComponent:f];
+        NSString *dp = [dst stringByAppendingPathComponent:f];
+        [fm removeItemAtPath:dp error:nil];
+        [fm copyItemAtPath:sp toPath:dp error:nil];
+    }
+}
 
 ENTRY_POINT void onLoad() {
-    ensurePrefsExist();
-
-    // We're also filtered into Settings.app — do nothing there.
     NSString *currentBundle = [[NSBundle mainBundle] bundleIdentifier];
+
+#ifdef STANDALONE_INJECT
+    // Standalone injectable build — always-on, no prefs needed.
+    if ([currentBundle isEqualToString:@"com.apple.Preferences"]) return;
+    NSLog(@"[Il2CppDumper] Standalone mode — dumping %@", currentBundle);
+
+    DumperPrefs p;
+    p.enabled          = true;
+    p.enabledForBundle = true;
+    p.genScript        = true;
+    p.genHeader        = true;
+    p.genDll           = true;
+    p.copyScripts      = true;
+    p.waitTime         = WAIT_TIME_SEC;
+#else
+    ensurePrefsExist();
     if ([currentBundle isEqualToString:@"com.apple.Preferences"]) return;
 
     DumperPrefs p = readPrefs();
@@ -88,6 +101,7 @@ ENTRY_POINT void onLoad() {
         return;
     }
     NSLog(@"[Il2CppDumper] Enabled for %@, initializing...", currentBundle);
+#endif
 
     Dumper::genScript = p.genScript;
     Dumper::genHeader = p.genHeader;
