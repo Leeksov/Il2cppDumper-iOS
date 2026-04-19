@@ -1,0 +1,37 @@
+# Theos build artifacts
+**/.theos/
+**/obj/
+**/packages/
+*.dSYM/
+
+# macOS
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+
+# Xcode
+*.xcuserdata/
+*.xcworkspace/xcuserdata/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build output
+*.o
+*.a
+*.dylib
+*.bundle
+*.app
+!Il2CppDumperPrefs/Resources/
+
+# Private context folder (reference only, not part of the tweak)
+_context/

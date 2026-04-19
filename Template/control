@@ -1,0 +1,8 @@
+Package: com.leeksov.il2cppdumper
+Name: Il2CppDumper Runtime
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Il2CppDumper Runtime for iOS devices
+Maintainer: GLEProject
+Author: Leeksov

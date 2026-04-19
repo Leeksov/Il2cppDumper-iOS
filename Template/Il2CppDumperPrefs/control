@@ -1,0 +1,9 @@
+Package: com.leeksov.il2cppdumperprefs
+Name: Il2CppDumper (Prefs)
+Depends: preferenceloader
+Version: 1.0.0
+Architecture: iphoneos-arm64
+Description: Preferences for Il2CppDumper
+Maintainer: Leeksov
+Author: Leeksov
+Section: Tweaks

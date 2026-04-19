@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+    <key>Filter</key>
+    <dict>
+        <key>Mode</key>
+        <string>Any</string>
+        <key>Bundles</key>
+        <array>
+            <string>com.apple.Preferences</string>
+        </array>
+        <key>Executables</key>
+        <array>
+            <string>Preferences</string>
+        </array>
+        <key>Classes</key>
+        <array>
+            <string>UIApplication</string>
+        </array>
+    </dict>
+</dict>
+</plist>
